@@ -3,3 +3,7 @@
 ^_pkgdown\.yml$
 ^public$
 ^pkgdown$
+^.gitlab-ci\.yml$
+^.github$
+^dev$
+^man-roxygen$

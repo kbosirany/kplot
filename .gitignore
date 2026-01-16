@@ -61,3 +61,8 @@ rsconnect/
 
 /public
 public
+config_*.yml
+reports/*/*.html
+reports/*/*.R
+reports/*/libs
+

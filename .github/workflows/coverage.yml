@@ -1,0 +1,61 @@
+name: Test coverage
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+    branches:
+      - main
+      - master
+
+jobs:
+  coverage:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    container:
+      image: rocker/geospatial:latest
+    
+    env:
+      R_LIBS_USER: ${{ github.workspace }}/ci/lib
+      COVERAGE_REPORT: ${{ github.workspace }}/ci/coverage.RDS
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Cache R packages
+        uses: actions/cache@v4
+        with:
+          path: ${{ github.workspace }}/ci
+          key: r-packages-${{ hashFiles('DESCRIPTION') }}
+          restore-keys: |
+            r-packages-
+      
+      - name: Setup R environment
+        run: |
+          mkdir -p $R_LIBS_USER
+          echo "R_LIBS='$R_LIBS_USER'" > .Renviron
+      
+      - name: Install devtools
+        run: R -q -e 'if (!require(devtools)) install.packages("devtools")'
+      
+      - name: Install dependencies
+        run: R -q -e 'devtools::install_deps(dependencies = TRUE)'
+      
+      - name: Install package
+        run: Rscript -e 'devtools::install()'
+      
+      - name: Install coverage tools
+        run: Rscript -e 'remotes::install_cran(c("covr", "DT"))'
+      
+      - name: Generate coverage report
+        run: |
+          Rscript -e 'cov <- covr::package_coverage(type = "all", quiet = FALSE);cov;saveRDS(cov, Sys.getenv("COVERAGE_REPORT"))'
+      
+      - name: Upload coverage artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: ci/coverage.RDS
