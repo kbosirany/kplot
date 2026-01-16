@@ -6,6 +6,15 @@ Authors@R:
       role = c("aut", "cre"), comment = c(ORCID = "0009-0009-2784-3108"))
 Description: What the package does (one paragraph).
 License: AGPL (>= 3)
+Imports: 
+    fairify,
+    dplyr,
+    ggplot2,
+    rlang,
+    tidyr,
+    ggConvexHull,
+    scales,
+    data.table
 Remotes: 
     git::https://forge.inrae.fr/umr-g-eau/fairify.git
 Encoding: UTF-8
