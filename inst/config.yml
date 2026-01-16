@@ -4,3 +4,13 @@ default:
     local: "path_for_data_on_your_disk"
     remote: "https://public_link_on_your_cloud"
     write_results: false
+  themes:
+    inrae:
+      colors:
+        - "#00a3a6"
+        - "#9dc544"
+        - "#423089"
+        - "#ed6e6c"
+        - "#c4c0b3"
+        - "#9ed6e3"
+        - "#797870"
