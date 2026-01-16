@@ -5,10 +5,7 @@ Authors@R:
     person("Kevin Bosirany", "Orlando", , "kevinbosirany@gmail.com",
       role = c("aut", "cre"), comment = c(ORCID = "0009-0009-2784-3108"))
 Description: What the package does (one paragraph).
-License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
-    license
-Depends: 
-    fairify
+License: AGPL (>= 3)
 Remotes: 
     git::https://forge.inrae.fr/umr-g-eau/fairify.git
 Encoding: UTF-8
