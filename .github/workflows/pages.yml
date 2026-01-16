@@ -1,0 +1,89 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+      - master
+      - dev
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: rocker/geospatial:latest
+    
+    env:
+      R_LIBS_USER: ${{ github.workspace }}/ci/lib
+      COVERAGE_REPORT: ${{ github.workspace }}/ci/coverage.RDS
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Cache R packages
+        uses: actions/cache@v4
+        with:
+          path: ${{ github.workspace }}/ci
+          key: r-packages-${{ hashFiles('DESCRIPTION') }}
+          restore-keys: |
+            r-packages-
+      
+      - name: Setup R environment
+        run: |
+          mkdir -p $R_LIBS_USER
+          echo "R_LIBS='$R_LIBS_USER'" > .Renviron
+      
+      - name: Install devtools
+        run: R -q -e 'if (!require(devtools)) install.packages("devtools")'
+      
+      - name: Install dependencies
+        run: R -q -e 'devtools::install_deps(dependencies = TRUE)'
+      
+      - name: Download coverage artifacts
+        uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: coverage-report
+          path: ci/
+      
+      - name: Install pkgdown
+        run: R -q -e 'if (!require(pkgdown)) install.packages("pkgdown")'
+      
+      - name: Build site
+        run: R -q -e 'fairify::build_site(output_format = "bookdown::gitbook")'
+      
+      - name: Install coverage tools
+        run: Rscript -e 'remotes::install_cran(c("covr", "DT"))'
+      
+      - name: Generate coverage HTML report
+        continue-on-error: true
+        run: |
+          if [ -f "$COVERAGE_REPORT" ]; then
+            Rscript -e 'covr::report(readRDS(Sys.getenv("COVERAGE_REPORT")), "public/coverage.html")'
+          fi
+      
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: public/
+  
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

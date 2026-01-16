@@ -1,0 +1,43 @@
+name: R CMD check
+
+on:
+  push:
+    branches-ignore:
+      - 'gh-pages'
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    container:
+      image: rocker/geospatial:latest
+    
+    env:
+      R_LIBS_USER: ${{ github.workspace }}/ci/lib
+      NOT_CRAN: "true"
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Cache R packages
+        uses: actions/cache@v4
+        with:
+          path: ${{ github.workspace }}/ci
+          key: r-packages-${{ hashFiles('DESCRIPTION') }}
+          restore-keys: |
+            r-packages-
+      
+      - name: Setup R environment
+        run: |
+          mkdir -p $R_LIBS_USER
+          echo "R_LIBS='$R_LIBS_USER'" > .Renviron
+      
+      - name: Install devtools
+        run: R -q -e 'if (!require(devtools)) install.packages("devtools")'
+      
+      - name: Install dependencies
+        run: R -q -e 'devtools::install_deps(dependencies = TRUE)'
+      
+      - name: Run R CMD check
+        run: R -q -e 'devtools::check(vignettes = TRUE, error_on = "error")'
