@@ -65,4 +65,3 @@ config_*.yml
 reports/*/*.html
 reports/*/*.R
 reports/*/libs
-
