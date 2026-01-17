@@ -14,7 +14,9 @@ Imports:
     tidyr,
     ggConvexHull,
     scales,
-    data.table
+    data.table,
+    TSstudio,
+    knitr
 Remotes: 
     git::https://forge.inrae.fr/umr-g-eau/fairify.git,
     git::https://github.com/cmartin/ggConvexHull.git
