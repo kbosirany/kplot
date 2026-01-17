@@ -17,7 +17,6 @@ Imports:
     data.table
 Remotes: 
     git::https://forge.inrae.fr/umr-g-eau/fairify.git,
-    git::https://github.com/davidcarayon/InraeThemes.git,
     git::https://github.com/cmartin/ggConvexHull.git
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
