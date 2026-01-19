@@ -13,6 +13,7 @@ kplot.tsstudio(x, ...)
   type,
   slider = TRUE,
   output_format = ifelse(knitr::is_html_output() || interactive(), "TSstudio", "ggplot"),
+  theme = NULL,
   ...
 )
 }
