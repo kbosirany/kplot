@@ -14,8 +14,10 @@
 #'     \item \code{y}: Character vector of column names to plot, or
 #'           "all" to plot all columns except the date/time column
 #'   }
-#' @param type Character string specifying the plot type (passed to
-#'   underlying plotting functions).
+#' @param type Character string specifying the plot type of the ggplot
+#'   fallback (see [kggplot::kgg_types()]; default: guessed from the data,
+#'   a line for dates). Ignored by TSstudio.
+#' @param theme Theme of the ggplot fallback (see [kggplot::kgg_themes()]).
 #' @param slider Logical indicating whether to include an interactive
 #'   time slider in the TSstudio plot. Default is \code{TRUE}.
 #' @param output_format Character string specifying the output format.
@@ -96,7 +98,7 @@ kplot.tsstudio <- function(x, ...) {
 kplot.tsstudio.data.frame <- function(
   x,
   vars,
-  type,
+  type = NULL,
   slider = TRUE,
   output_format = ifelse(
     knitr::is_html_output() || interactive(), "TSstudio", "ggplot"
@@ -105,11 +107,13 @@ kplot.tsstudio.data.frame <- function(
   ...
 ) {
   if (output_format != "TSstudio") {
-    return(kplot.ggplot(x, vars = vars, type = type, ...))
+    return(kplot.ggplot(x, vars = vars, type = type, theme = theme, ...))
   }
   if (!inherits(x[, vars$x, drop = TRUE], c("Date", "POSIXct", "POSIXlt"))) {
     stop("First column must be of class Date, POSIXct, or POSIXlt")
   }
   if ("all" %in% vars$y) vars$y <- colnames(x)[!colnames(x) == vars$x]
-  TSstudio::ts_plot(select(x, any_of(c(vars$x, vars$y))), ..., slider = slider)
+  TSstudio::ts_plot(
+    x[, c(vars$x, vars$y), drop = FALSE], ..., slider = slider
+  )
 }
