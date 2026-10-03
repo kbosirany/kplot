@@ -10,7 +10,7 @@ kplot.tsstudio(x, ...)
 \method{kplot.tsstudio}{data.frame}(
   x,
   vars,
-  type,
+  type = NULL,
   slider = TRUE,
   output_format = ifelse(knitr::is_html_output() || interactive(), "TSstudio", "ggplot"),
   theme = NULL,
@@ -33,8 +33,9 @@ POSIXct, or POSIXlt)
 "all" to plot all columns except the date/time column
 }}
 
-\item{type}{Character string specifying the plot type (passed to
-underlying plotting functions).}
+\item{type}{Character string specifying the plot type of the ggplot
+fallback (see \code{\link[kggplot:kgg_register_type]{kggplot::kgg_types()}}; default: guessed from the data,
+a line for dates). Ignored by TSstudio.}
 
 \item{slider}{Logical indicating whether to include an interactive
 time slider in the TSstudio plot. Default is \code{TRUE}.}
@@ -49,6 +50,8 @@ non-HTML output)
 }
 By default, automatically selects TSstudio for HTML output or
 interactive sessions, and ggplot otherwise.}
+
+\item{theme}{Theme of the ggplot fallback (see \code{\link[kggplot:kgg_register_theme]{kggplot::kgg_themes()}}).}
 }
 \value{
 When \code{output_format = "TSstudio"}, returns a TSstudio plot

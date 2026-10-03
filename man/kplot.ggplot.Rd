@@ -2,42 +2,25 @@
 % Please edit documentation in R/kplot.ggplot.R
 \name{kplot.ggplot}
 \alias{kplot.ggplot}
-\alias{kplot.ggplot.data.frame}
 \title{Plot data with ggplot}
 \usage{
 kplot.ggplot(x, ...)
-
-\method{kplot.ggplot}{data.frame}(
-  x,
-  vars,
-  type,
-  labels = list(title = NULL, x = NULL, y = NULL, color = vars$color, fill = vars$fill),
-  theme = NULL,
-  ...
-)
 }
 \arguments{
-\item{x}{Data to plot.}
+\item{x}{Data to plot (data frame, \code{ts}, matrix, ...).}
 
-\item{...}{Additional arguments passed to the plotting method.}
-
-\item{vars}{\link{list} Variables to plot}
-
-\item{type}{\link{character} Type of plot to create (e.g., "point", "line",
-"density", "cumFreq", "bar", "bar_dodge", "convexhull").}
-
-\item{labels}{\link{list} Labels for the plot (title, x, y, color, fill).}
-
-\item{theme}{\link{character} Theme to apply to the plot.}
+\item{...}{Arguments passed to \code{\link[kggplot:kggplot]{kggplot::kggplot()}}.}
 }
 \value{
-A ggplot object.
+A \code{kggplot} object (see \code{\link[kggplot:as_ggplot]{kggplot::as_ggplot()}} to get a ggplot).
 }
 \description{
-Generic and method specific functions to plot data using ggplot2.
+The ggplot back end of \code{\link[=kplot]{kplot()}}. The implementation lives in the
+\pkg{kggplot} package: this function is a thin wrapper around
+\code{\link[kggplot:kggplot]{kggplot::kggplot()}}, and accepts all its arguments (\code{vars}, \code{type},
+\code{labels}, \code{theme}, ... or the shorter \code{x}, \code{y}, \code{color} forms).
 }
 \examples{
-data(iris)
 kplot.ggplot(
   iris,
   vars = list(x = "Sepal.Length", y = "Sepal.Width", color = "Species"),

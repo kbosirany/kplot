@@ -17,6 +17,9 @@ kplot(x, package = "ggplot", ...)
 A plot of the object \code{x}.
 }
 \description{
-This function is the main function to plot data using different plotting
-packages.
+Entry point to plot data with different plotting back ends. \code{package}
+selects the back end: \code{kplot(x, "ggplot", ...)} calls \code{\link[=kplot.ggplot]{kplot.ggplot()}}
+(implemented by the \pkg{kggplot} package), \code{kplot(x, "tsstudio", ...)}
+calls \code{\link[=kplot.tsstudio]{kplot.tsstudio()}}. Any function named \code{kplot.<package>} is a valid
+back end.
 }
